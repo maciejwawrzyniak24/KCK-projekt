@@ -2,5 +2,5 @@
 
 ## Autorzy:
 Maciej Wawrzyniak, Przemysław Szymczak
-##Temat:
+## Temat:
 Wykrywanie położenia pionków na planszy z gry GO
