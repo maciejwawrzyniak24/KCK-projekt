@@ -28,25 +28,33 @@ def main():
     d[9] = "./zdjecia/rr2.jpg"
     d[10] = "./zdjecia/tt1.jpg"
     d[11] = "./zdjecia/tt2.jpg"
-    d[12] = "./zdjecia/Nowy-sk-adany-przeno-ny-Gomoku-Gobang-podr-y-szachy-gra-planszowa-z-magnetycznym-rozrywki-cz.jpg"
 
     for i in range(len(d)):
         img = cv2.imread(d[i])
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        #cv2.imwrite("s{}.jpg".format(i), gray)
 
         ret,thresh1 = cv2.threshold(gray,80,255,cv2.THRESH_BINARY)
+        #cv2.imwrite("a{}1.jpg".format(i), thresh1)
 
         imgEnd = cv2.Canny(thresh1,50,150,apertureSize = 3)
+        #cv2.imwrite("s{}2.jpg".format(i), imgEnd)
 
         kernel = np.ones((2,2),np.uint8)
         dil = cv2.dilate(imgEnd,kernel,iterations = 1)
+        #cv2.imwrite("d{}3.jpg".format(i), dil)
 
         lines = cv2.HoughLines(dil,1,np.pi/180,250)
+        if (lines is not None):
+            print(len(lines))
+
         if(lines is None or len(lines) < 9):
+
             imgEnd = cv2.Canny(gray, 50, 150, apertureSize = 3)
             dil = cv2.dilate(imgEnd, kernel, iterations = 1)
             lines = cv2.HoughLines(dil, 1, np.pi/180, 400)
             
+
         imgCopy = img.copy()
 
         deleted = []
@@ -60,6 +68,23 @@ def main():
         deleted.sort(reverse=True)
         for deli in deleted:
             lines = np.delete(lines,deli, axis=0)
+
+        #j = 0
+        #for line in lines:
+        #    j+=1
+        #    rho, theta = line[0]
+        #    a = np.cos(theta)
+        #    b = np.sin(theta)
+        #    x0 = a*rho
+        #    y0 = b*rho
+        #    x1 = int(x0 + 2000*(-b))
+        #    y1 = int(y0 + 2000*(a))
+        #    x2 = int(x0 - 2000*(-b))
+        #    y2 = int(y0 - 2000*(a))
+        #    cv2.line(imgCopy,(x1,y1),(x2,y2),(0,0,255),2)
+
+        #print("obraz {}, linii {}".format(i,j))
+        #cv2.imwrite("s{}4.jpg".format(i), imgCopy) #ostateczny obraz
 
         poziome = np.copy(lines)
         pionowe = np.copy(lines)
@@ -97,18 +122,26 @@ def main():
                 middle_of_circle = findIntersection(x1,y1,x2,y2,x4,y4,x5,y5)
                 circles[nr] = middle_of_circle
                 nr += 1
+                #cv2.circle(imgCopy, (int(middle_of_circle[0]), int(middle_of_circle[1])), radius=2, color=(255,0,0), thickness=-1)
                
+        #cv2.imwrite("s{}5.jpg".format(i), imgCopy) #ostateczny obraz 
         ind = np.lexsort((circles[:,0], circles[:, 1]))
         circles = circles[ind]
+        #print(circles[ind])
+        colors = np.empty(len(poziome) * len(pionowe), dtype = int )
         
         imgCopy = img.copy()
         
         for ii in circles:
+            #cv2.circle(imgCopy, (int(ii[0]), int(ii[1])), radius=2, color=(255,0,0 ), thickness = -1)
             r = gray[int(ii[1])-10:int(ii[1])+10, int(ii[0]) - 10:int(ii[0]) + 10 ]
             r2 = r.tolist()
+            #pcolor = r.mean(axis = 0).mean(axis = 0)
+            #print(pcolor)
             r2 = list(chain.from_iterable(r2))
             lenr2 = len(r2)
             pcolor = sum(r2) / lenr2
+            #print(pcolor)
             if pcolor > 200:
                 cv2.putText(imgCopy, "W", (int(ii[0]), int(ii[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA )
             elif pcolor < 80:
@@ -118,6 +151,7 @@ def main():
 
 
         cv2.imwrite("s{}6.jpg".format(i), imgCopy) #ostateczny obraz 
+
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
