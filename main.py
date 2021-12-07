@@ -28,6 +28,7 @@ def main():
     d[9] = "./zdjecia/rr2.jpg"
     d[10] = "./zdjecia/tt1.jpg"
     d[11] = "./zdjecia/tt2.jpg"
+    d[12] = "./zdjecia/Nowy-sk-adany-przeno-ny-Gomoku-Gobang-podr-y-szachy-gra-planszowa-z-magnetycznym-rozrywki-cz.jpg"
 
     for i in range(len(d)):
         img = cv2.imread(d[i])
@@ -108,7 +109,7 @@ def main():
             r2 = list(chain.from_iterable(r2))
             lenr2 = len(r2)
             pcolor = sum(r2) / lenr2
-            if pcolor > 220:
+            if pcolor > 200:
                 cv2.putText(imgCopy, "W", (int(ii[0]), int(ii[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA )
             elif pcolor < 80:
                 cv2.putText(imgCopy, "B", (int(ii[0]), int(ii[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA )

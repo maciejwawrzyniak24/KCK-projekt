@@ -142,7 +142,7 @@ def main():
             lenr2 = len(r2)
             pcolor = sum(r2) / lenr2
             #print(pcolor)
-            if pcolor > 220:
+            if pcolor > 200:
                 cv2.putText(imgCopy, "W", (int(ii[0]), int(ii[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2, cv2.LINE_AA )
             elif pcolor < 80:
                 cv2.putText(imgCopy, "B", (int(ii[0]), int(ii[1])), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA )
